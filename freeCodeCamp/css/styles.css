@@ -20,32 +20,60 @@ html,body{
     cursor:pointer;
 }
 
-#grid{
-    display:flex;flex-flow:row wrap;
+#game{
+    display:flex; flex-flow:row wrap;
+    justify-content:center; align-items:flex-start;
+    gap:2rem;
     position:relative;
-    width:36vh; aspect-ratio:1/2;
-    background:#fff;
-    border:1px solid var(--bdr);    
-    border-right-width:0; border-bottom-width:0;
+    
+}
+
+#grid, #miniGrid{
+    display:flex;flex-flow:row wrap;
+    justify-content:space-between;
+    position:relative; overflow:hidden;
+    border:1px solid var(--bdr);
+    border-left-width:0; 
     box-shadow:
         1px 1px 0 #666,
         1px -1px 0 #666,
         -1px 1px 0 #666, 
         -1px -1px 0 #666;
 }
+    #grid{width:36vh; aspect-ratio:1/1.99;}
+    #miniGrid{
+        overflow:visible;
+        margin-top:1.5rem;
+        width:13vh; aspect-ratio:1/1;}
+    #miniGrid::before{
+        content:"UP NEXT"; display:block; position:absolute;
+        top:0;left:0;
+        width:100%;
+        text-align:center;
+        transform:translateY(-150%);
+        font-size:0.875rem; font-weight:bold;
+    }
+
 
 .grid-cell{
     position:relative;
     width:10%; aspect-ratio:1/1;
+    background:#fff;
     border:1px solid var(--bdr);
-    border-top-width:0; border-left-width:0;
-    transition:.1s;
-}
+    border-top-width:0; border-right-width:0;
+    transition:.1s;}
 
-.tet{background:gainsboro;}
+    #miniGrid .grid-cell{
+        width:25%;
+    }
+
+.taken{border:none;} /* 바닥에 깔려있는 애들 */
+
+.tet{background:rgb(70, 70, 83);}
 .tet.red{background:red;}
 .tet.yellow{background:gold;}
 .tet.blue{background:dodgerblue;}
 .tet.green{background:mediumaquamarine;}
 .tet.purple{background:violet;}
-.stack{filter:saturate(80%) brightness(90%);}
+
+.stack{filter:saturate(50%) brightness(50%);}
