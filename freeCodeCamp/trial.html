@@ -21,5 +21,14 @@
         <section id="miniGrid">
         </section><!-- miniGrid -->
     </div><!-- game -->
+
+    <script>
+        const arr = Array.from(Array(50).keys());
+        const empty = arr[32];
+        const key = arr[22];
+        arr[22] = empty;
+        arr[32] = key;
+        console.log(arr);
+    </script>
 </body>
 </html>

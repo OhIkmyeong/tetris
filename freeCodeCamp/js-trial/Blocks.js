@@ -160,7 +160,7 @@ export default class Blocks{
             this.GAME.update_score(this.curr.length);
 
             //한줄 완성 확인
-            this.lineClear();
+            const isClear = this.lineClear();
             
             //새 블록 생성
             this.newTet();
@@ -286,18 +286,18 @@ export default class Blocks{
     /* 💥 한 줄 완성시 */
     lineClear(){
         for(let i=0; i<this.GAME.GRID.cell.length - width; i += width){
-            this.isClear(i);
+            this.isClearRow(i);
             for(let k=0; k<i; k+=width){
-                this.isClear(k);
-            }//for
-        }//for
+                this.isClearRow(k);
+            }//for-(1)
+        }//for(0)
     }//lineClear
 
-    isClear(i){
+    isClearRow(i){
         const CELL = this.GAME.GRID.cell;
         const row = this.getRow(i);
-        const isClear = row.every(idx=>CELL[idx].classList.contains('stack'));
-        if(isClear){
+        const CLEAR = row.every(idx=>CELL[idx].classList.contains('stack'));
+        if(CLEAR){
             //점수 업데이트
             this.GAME.update_score(width * 10);
             //클래스 없애고
@@ -307,7 +307,7 @@ export default class Blocks{
             //삭제
             this.removeLine(i);
         }//if
-    }//isClear
+    }//isClearRow
 
     removeLine(i){
         const removed = this.GAME.GRID.cell.splice(i, width);
@@ -322,6 +322,4 @@ export default class Blocks{
         }//for
         return row;
     }//getRow
-
-    //1:26
 }//class - Blocks
