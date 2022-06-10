@@ -14,7 +14,10 @@ export default class Game{
         this.$score = document.getElementById('score');
         this.score = 0;
 
-        this.addEvent();
+        this.pos = {
+            prev : {x:undefined, y:undefined}, 
+            next : {x:undefined, y:undefined}
+        };
     }//constructor
 
     /* [METHOD] */
@@ -33,6 +36,9 @@ export default class Game{
             this.playing = true;
             if(dataGame == "ready"){
                 //새 시작
+                this.addKeyEvent();
+                this.addTouchEvent();
+
                 this.reset_score();
                 this.GRID.reset();
                 this.BLOCK.reset();
@@ -40,7 +46,8 @@ export default class Game{
             }else if(dataGame == "paused"){
                 //재개
                 this.BLOCK.moveDownCascading();
-                this.addEvent();
+                this.addKeyEvent();
+                this.addTouchEvent();
             }
         }//if else
     };//on_click
@@ -68,10 +75,17 @@ export default class Game{
         console.log('GAME OVER',new Date());
     }//gameOver
 
-    addEvent(){
+    /* 이벤트 추가 */
+    addKeyEvent(){
         window.addEventListener('keydown', this.on_keydown,{once:true});
-    }//addEvent
+    }//addKeyEvent
 
+    addTouchEvent(){
+        window.addEventListener('touchstart',this.on_touchStart, {once:true});
+        window.addEventListener('touchend',this.on_touchEnd, {once:true});
+    }//addTouchEvent
+
+    /* 키보드 이벤트 */
     on_keydown = async (e) => {
         if(!this.playing){return;}
         
@@ -89,13 +103,45 @@ export default class Game{
                 this.BLOCK.moveDown();
                 break;
             default :
-                this.addEvent();
+                this.addKeyEvent();
                 return;
         }//switch
 
         //add Event Again...
-        this.addEvent();
+        this.addKeyEvent();
+        this.addTouchEvent();
     }//on_keydown
+
+    /* 터치시 */
+    on_touchStart = (e) =>{
+        this.pos.prev.x = e.changedTouches[0].clientX; 
+        this.pos.prev.y = e.changedTouches[0].clientY; 
+    }//on_touchStart
+
+    on_touchEnd = (e) =>{
+        this.pos.next.x = e.changedTouches[0].clientX; 
+        this.pos.next.y = e.changedTouches[0].clientY; 
+        const changeX = Math.abs(this.pos.next.x - this.pos.prev.x)
+        const changeY = Math.abs(this.pos.next.y - this.pos.prev.y)
+        const evt = {key : undefined};
+        if(changeX > changeY){
+            //좌우
+            if(this.pos.prev.x > this.pos.next.x){
+                evt.key = "ArrowLeft";
+            }else{
+                evt.key = "ArrowRight";
+            }
+        }else{
+            //상하
+            if(this.pos.prev.y > this.pos.next.y){
+                evt.key = "ArrowUp";
+            }else{
+                evt.key = "ArrowDown";
+            }
+        }//if else
+
+        this.on_keydown(evt);
+    }//on_touchEnd
 
     /* SCORE */
     get score(){return this.#SCORE;}
