@@ -40,6 +40,7 @@ export default class Game{
             }else if(dataGame == "paused"){
                 //재개
                 this.BLOCK.moveDownCascading();
+                this.addEvent();
             }
         }//if else
     };//on_click

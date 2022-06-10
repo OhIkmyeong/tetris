@@ -155,8 +155,13 @@ export default class Blocks{
             //멈추고 쌓기
             this.stop();
             await this.stack();
-            //점수 업데이트
+
+            //점수 업데이트 (개별)
             this.GAME.update_score(this.curr.length);
+
+            //한줄 완성 확인
+            this.lineClear();
+            
             //새 블록 생성
             this.newTet();
             return;
@@ -280,18 +285,35 @@ export default class Blocks{
 
     /* 💥 한 줄 완성시 */
     lineClear(){
-        const CELL = this.GAME.GRID.cell;
-        for(let i=0; i<CELL.length; i += width){
-            const row = this.getRow(i);
-            const isClear = row.every(idx=>CELL[idx].classList.contains('stack'));
-            if(isClear){
-                this.GAME.update_score(width * 10);
-                row.forEach(idx=>{
-                    CELL[idx].classList.remove('tet', 'stack');
-                });
-            }//if
+        for(let i=0; i<this.GAME.GRID.cell.length - width; i += width){
+            this.isClear(i);
+            for(let k=0; k<i; k+=width){
+                this.isClear(k);
+            }//for
         }//for
     }//lineClear
+
+    isClear(i){
+        const CELL = this.GAME.GRID.cell;
+        const row = this.getRow(i);
+        const isClear = row.every(idx=>CELL[idx].classList.contains('stack'));
+        if(isClear){
+            //점수 업데이트
+            this.GAME.update_score(width * 10);
+            //클래스 없애고
+            row.forEach(idx=>{
+                CELL[idx].classList.remove('tet', 'stack', 'red', 'yellow', 'blue', 'green', 'purple');
+            });
+            //삭제
+            this.removeLine(i);
+        }//if
+    }//isClear
+
+    removeLine(i){
+        const removed = this.GAME.GRID.cell.splice(i, width);
+        this.GAME.GRID.cell = removed.concat(this.GAME.GRID.cell);
+        this.GAME.GRID.cell.forEach($cell => this.GAME.GRID.$grid.appendChild($cell));
+    }//removeLine
 
     getRow(i){
         const row = [];
@@ -302,6 +324,4 @@ export default class Blocks{
     }//getRow
 
     //1:26
-}//Blocks
-
-//53:00
+}//class - Blocks

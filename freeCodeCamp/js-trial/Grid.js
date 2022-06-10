@@ -24,6 +24,7 @@ export default class Grid{
         for(let i=0; i<210; i++){
             const $gridCell = document.createElement('DIV');
             $gridCell.classList.add('grid-cell');
+            $gridCell.dataset.number = i;
             if(i >= 200){ $gridCell.classList.add('taken');}
             $frag.appendChild($gridCell);
             cell.push($gridCell);
@@ -50,5 +51,6 @@ export default class Grid{
     }
     /* [GETTER, SETTER] */
     get cell(){return this.#CELL;}
+    set cell(value){this.#CELL = value;}
     get preview(){return this.#PREVIEW;}
 }//Grid
